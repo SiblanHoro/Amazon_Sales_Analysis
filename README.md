@@ -281,16 +281,16 @@ This project is a dynamic and interactive **Power BI dashboard** that analyzes A
 ## 🖼️ Dashboard Preview
 
 ### Page 1 – Overview  
-![Page 1](screenshots/Page1.png)
+![Page 1](Screenshot (152).png)
 
 ### Page 2 – Product & Revenue Analysis  
-![Page 2](screenshots/Page2.png)
+![Page 2](Screenshot (153).png)
 
 ### Page 3 – Customer Insights  
-![Page 3](screenshots/Page3.png)
+![Page 3](Screenshot (154).png)
 
 ### Page 4 – Ratings & Feedback  
-![Page 4](screenshots/Page4.png)
+![Page 4](Screenshot (155).png)
 
 ---
 
