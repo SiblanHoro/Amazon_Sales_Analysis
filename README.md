@@ -38,7 +38,7 @@ The dataset includes information on:
 - Customer type segmentation
 - Date-wise sales trend
 
-(SQL queries are available in the `/SQL/` folder)
+(SQL queries are)
 Create Database Amazon_Sales
 USE Amazon_Sales
 
@@ -48,7 +48,7 @@ Select * from Amazon
 ```sql
 SELECT Product_line,
        Gender,
-	   SUM(Total) AS Total_revenue
+       SUM(Total) AS Total_revenue
 FROM Amazon
 GROUP BY Product_line, Gender
 ```
@@ -64,18 +64,19 @@ ORDER BY Total_income DESC
 
 ```sql
 WITH MonthlyRevenue AS (
-SELECT DATENAME(mm, Date) AS Months,
-       SUM(Total) AS Revenue
-FROM Amazon
-GROUP BY DATENAME(mm, Date)
+        SELECT DATENAME(mm, Date) AS Months,
+                  SUM(Total) AS Revenue
+        FROM Amazon
+        GROUP BY DATENAME(mm, Date)
 )
 SELECT curr.Months,
        curr.Revenue,
-	   prev.revenue AS Prev_Revenue,
-	   curr.Revenue - Prev_Revenue AS Change
+       prev.revenue AS Prev_Revenue,
+       curr.Revenue - Prev_Revenue AS Change
 FROM MonthlyRevenue AS curr
-LEFT JOIN MonthlyRevenue AS prev
-   ON prev.Months = curr.Months
+LEFT JOIN
+      MonthlyRevenue AS prev
+ON prev.Months = curr.Months
 ```
 ---Task 4. Generate A running total of revenue over time (based on the date column).
 ```sql
@@ -87,24 +88,26 @@ FROM Amazon
 ```sql
 SELECT Payment,
        COUNT(*) AS transactions,
-	   ROUND(100 * COUNT(*) / (SELECT COUNT(*) FROM Amazon), 2) AS Percentage
+       ROUND(100 * COUNT(*) / (SELECT COUNT(*) FROM Amazon), 2)
+AS Percentage
 FROM Amazon
 GROUP BY Payment;
-```sql
+```
 ---Task 6. List all transactions where the rating is heigher than the average rating across all transaction 
 ```sql
-SELECT * FROM Amazon
+SELECT *
+FROM Amazon
 WHERE Rating > (SELECT AVG(Rating) FROM Amazon) 
-```sql
+```
 ---Task 7. Find the best-performing product line in terms of revenue for each branch
 ```sql
 SELECT B.Branch,
        B.Product_line,
-	   B.Revenue
+       B.Revenue
 FROM (
     SELECT Branch,
            Product_line,
-	       SUM(Total) AS Revenue
+           SUM(Total) AS Revenue
     FROM Amazon
     GROUP BY Branch, Product_line
 ) AS B
@@ -113,24 +116,25 @@ WHERE B.Revenue = (
     FROM (
 	   SELECT Branch,
 	          Product_line,
-			  SUM(Total) AS Revenue
+                  SUM(Total) AS Revenue
 	   FROM Amazon
 	   GROUP BY Branch, Product_line
 	) SUB
-	WHERE SUB.Branch = B.Branch
+    WHERE SUB.Branch = B.Branch
 )
 ```sql
 ---Task 8. For each city, identify the most frequent customer type 
 ```sql
 WITH Ranked As(
-SELECT City, 
-       Customer_type,     
-       RANK() OVER(PARTITION BY City ORDER BY COUNT(*) DESC) 
-AS rnk
-FROM Amazon
-GROUP BY City, Customer_type
-)
-SELECT City, Customer_type
+       SELECT City, 
+              Customer_type,     
+              RANK() OVER(PARTITION BY City ORDER BY COUNT(*) DESC) 
+       AS rnk
+       FROM Amazon
+       GROUP BY City, Customer_type
+       )
+SELECT City,
+       Customer_type
 FROM Ranked 
 WHERE rnk = 1
 ```
@@ -138,7 +142,7 @@ WHERE rnk = 1
 ```sql
 SELECT TOP 1
        SUM(Gross_income) AS Highest_gross_income,
-	   Date
+       Date
 FROM Amazon
 GROUP BY Date
 ORDER BY Highest_gross_income DESC
@@ -148,8 +152,8 @@ ORDER BY Highest_gross_income DESC
 SELECT Invoice_ID,
        Product_line,
        Unit_price,
-	   AVG(Unit_price) OVER(PARTITION BY Product_line) AS Avg_Unit_price,
-	   Unit_price - AVG(Unit_price) OVER(PARTITION BY  Product_line) AS Diff
+       AVG(Unit_price) OVER(PARTITION BY Product_line) AS Avg_Unit_price,
+       Unit_price - AVG(Unit_price) OVER(PARTITION BY  Product_line) AS Diff
 FROM Amazon
 ```                            
 ---Task 11. Analyze the total income and number of transactions each customer type per branch.
@@ -181,15 +185,15 @@ ORDER BY Num_of_trans DESC;
 ```sql
 SELECT Product_line,
        Date,
-	   Quantity,
-	   SUM(Quantity) OVER(PARTITION BY Product_line ORDER BY Date ROWS UNBOUNDED PRECEDING) AS Cumulative_qty
+       Quantity,
+       SUM(Quantity) OVER(PARTITION BY Product_line ORDER BY Date ROWS UNBOUNDED PRECEDING) AS Cumulative_qty
 FROM Amazon
 ```
 ---Task 15. Get the distribution of genders for each payment method.
 ```sql
 SELECT Payment,
        Gender,
-	   COUNT(*) AS Cnt
+       COUNT(*) AS Cnt
 FROM Amazon
 GROUP BY Payment, Gender
 ```
@@ -198,8 +202,8 @@ GROUP BY Payment, Gender
 WITH T90 AS (
          SELECT PERCENTILE_CNT(0.9) WITHIN GROUP 
 		 (ORDER BY Total) AS T90_val
-		 FROM Amazon
-		 )
+         FROM Amazon
+            )
 SELECT A.*
 FROM Amazon AS A 
 CROSS JOIN T90
@@ -223,7 +227,7 @@ WHERE Quantity = (SELECT MAX(Quantity) FROM Amazon)
 ```sql
 SELECT Product_line,
        DATENAME(mm, Date) AS Months,
-	   AVG(Cogs) AS Avgcogs
+       AVG(Cogs) AS Avgcogs
 FROM Amazon
 GROUP BY DATENAME(mm, Date), product_line
 ```
@@ -231,7 +235,7 @@ GROUP BY DATENAME(mm, Date), product_line
 ```sql
 SELECT City,
        SUM(Total) AS Revenue,
-	   RANK() OVER(ORDER BY SUM(Total) DESC) AS Rnk
+       RANK() OVER(ORDER BY SUM(Total) DESC) AS Rnk
 FROM Amazon
 GROUP BY City
 ```
